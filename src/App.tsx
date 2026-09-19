@@ -15,6 +15,7 @@ import { UserConfirmationModal } from './components/UserConfirmationModal';
 import { SplitResultsView } from './components/SplitResultsView';
 import { PrintableSummary } from './components/PrintableSummary';
 import { RegulatoryDisclaimer, Footer } from './components/RegulatoryDisclaimer';
+import { OfflineIndicator } from './components/OfflineIndicator';
 import { UPIPayment, SplitPayment, SplitStrategy } from './types/upi';
 import { HistoryRecord } from './types/history';
 import { calculateSplit } from './lib/splitEngine';
@@ -29,8 +30,15 @@ import {
   deleteHistoryRecord,
   clearAllHistory,
 } from './utils/historyStorage';
+import {
+  getActiveSession,
+  saveActiveSession,
+  clearActiveSession,
+  getPendingUPIReturn,
+  clearPendingUPIReturn,
+} from './utils/activeSessionStorage';
 import { useOnlineStatus } from './hooks/usePWAInstall';
-import { WifiOff, Edit3, QrCode } from 'lucide-react';
+import { WifiOff, Edit3, QrCode, CheckCircle } from 'lucide-react';
 
 export default function App() {
   const isOnline = useOnlineStatus();
@@ -55,41 +63,153 @@ export default function App() {
     }
   }, [darkMode]);
 
+  // Load any previously active session (so refresh preserves exact screen & data)
+  const initialSession = getActiveSession();
+
   // Main View Mode: Split Workflow vs History Page
-  const [activeView, setActiveView] = useState<'split' | 'history'>('split');
+  const [activeView, setActiveView] = useState<'split' | 'history'>(
+    () => initialSession?.activeView || 'split'
+  );
 
   // History Records from Local Storage
   const [historyRecords, setHistoryRecords] = useState<HistoryRecord[]>(() =>
     getHistoryRecords()
   );
-  const [currentRecordId, setCurrentRecordId] = useState<string | null>(null);
+  const [currentRecordId, setCurrentRecordId] = useState<string | null>(
+    () => initialSession?.currentRecordId || null
+  );
 
-  // Workflow Step
-  const [step, setStep] = useState<WorkflowStep>('upload');
-  const [inputTab, setInputTab] = useState<'manual' | 'qr'>('manual');
-  const [originalPayment, setOriginalPayment] = useState<UPIPayment | null>(null);
-  const [, setHasOriginalAmount] = useState<boolean>(false);
+  // Workflow Step (restored from active session if user refreshes)
+  const [step, setStep] = useState<WorkflowStep>(() => initialSession?.step || 'upload');
+  const [inputTab, setInputTab] = useState<'manual' | 'qr'>(() => initialSession?.inputTab || 'manual');
+  const [originalPayment, setOriginalPayment] = useState<UPIPayment | null>(
+    () => initialSession?.originalPayment || null
+  );
+  const [hasOriginalAmount, setHasOriginalAmount] = useState<boolean>(
+    () => initialSession?.hasOriginalAmount || false
+  );
 
   // Configuration State
-  const [totalAmount, setTotalAmount] = useState<number>(7000);
-  const [strategy, setStrategy] = useState<SplitStrategy>('random');
-  const [maxAmount, setMaxAmount] = useState<number>(1999);
-  const [equalParts, setEqualParts] = useState<number>(4);
-  const [customAmounts, setCustomAmounts] = useState<number[]>([2000, 1500, 2000, 1500]);
-  const [preserveReference, setPreserveReference] = useState<boolean>(false);
+  const [totalAmount, setTotalAmount] = useState<number>(() => initialSession?.totalAmount || 7000);
+  const [strategy, setStrategy] = useState<SplitStrategy>(() => initialSession?.strategy || 'random');
+  const [maxAmount, setMaxAmount] = useState<number>(() => initialSession?.maxAmount || 1999);
+  const [equalParts, setEqualParts] = useState<number>(() => initialSession?.equalParts || 4);
+  const [customAmounts, setCustomAmounts] = useState<number[]>(
+    () => initialSession?.customAmounts || [2000, 1500, 2000, 1500]
+  );
+  const [preserveReference, setPreserveReference] = useState<boolean>(
+    () => initialSession?.preserveReference || false
+  );
 
   // Pending Review Amounts
-  const [pendingSplitAmounts, setPendingSplitAmounts] = useState<number[]>([]);
-  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [pendingSplitAmounts, setPendingSplitAmounts] = useState<number[]>(
+    () => initialSession?.pendingSplitAmounts || []
+  );
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(
+    () => initialSession?.showConfirmModal || false
+  );
   const [isGeneratingQRs, setIsGeneratingQRs] = useState<boolean>(false);
 
   // Output Generated Payments
-  const [splitPayments, setSplitPayments] = useState<SplitPayment[]>([]);
+  const [splitPayments, setSplitPayments] = useState<SplitPayment[]>(
+    () => initialSession?.splitPayments || []
+  );
 
   // Modals
   const [showScanner, setShowScanner] = useState(false);
   const [showPasteModal, setShowPasteModal] = useState(false);
   const [privacyMode, setPrivacyMode] = useState(true);
+
+  // Notification for Auto-marked payments
+  const [autoCompleteToast, setAutoCompleteToast] = useState<string | null>(null);
+
+  // Persist Active Session to LocalStorage so refreshing the page preserves all data
+  useEffect(() => {
+    if (originalPayment || step !== 'upload' || splitPayments.length > 0) {
+      saveActiveSession({
+        step,
+        inputTab,
+        originalPayment,
+        hasOriginalAmount,
+        totalAmount,
+        strategy,
+        maxAmount,
+        equalParts,
+        customAmounts,
+        preserveReference,
+        pendingSplitAmounts,
+        showConfirmModal,
+        splitPayments,
+        currentRecordId,
+        activeView,
+      });
+    } else {
+      clearActiveSession();
+    }
+  }, [
+    step,
+    inputTab,
+    originalPayment,
+    hasOriginalAmount,
+    totalAmount,
+    strategy,
+    maxAmount,
+    equalParts,
+    customAmounts,
+    preserveReference,
+    pendingSplitAmounts,
+    showConfirmModal,
+    splitPayments,
+    currentRecordId,
+    activeView,
+  ]);
+
+  // Auto mark as completed when user taps QR/button, goes to UPI app, and returns
+  useEffect(() => {
+    const handleReturnFromUPI = () => {
+      if (document.visibilityState === 'visible') {
+        const pending = getPendingUPIReturn();
+        if (!pending) return;
+
+        // Auto-mark if returned within 20 minutes
+        if (Date.now() - pending.timestamp < 20 * 60 * 1000) {
+          setSplitPayments((prev) => {
+            const target = prev.find((p) => p.id === pending.paymentId);
+            if (target && target.status !== 'completed') {
+              const updated = prev.map((p) =>
+                p.id === pending.paymentId ? { ...p, status: 'completed' as const } : p
+              );
+
+              // Also update in history records
+              if (currentRecordId) {
+                updateRecordPayments(currentRecordId, updated);
+                setHistoryRecords(getHistoryRecords());
+              }
+
+              setAutoCompleteToast(`Part ${pending.partIndex} auto-marked as Completed ✓`);
+              setTimeout(() => setAutoCompleteToast(null), 4000);
+              return updated;
+            }
+            return prev;
+          });
+          clearPendingUPIReturn();
+        } else {
+          clearPendingUPIReturn();
+        }
+      }
+    };
+
+    // Check immediately on mount in case the page reloaded on return
+    handleReturnFromUPI();
+
+    document.addEventListener('visibilitychange', handleReturnFromUPI);
+    window.addEventListener('focus', handleReturnFromUPI);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleReturnFromUPI);
+      window.removeEventListener('focus', handleReturnFromUPI);
+    };
+  }, [currentRecordId]);
 
   // Handle entry parsed (either from manual form or QR upload)
   const handlePaymentParsed = (payment: UPIPayment, hasAmount: boolean) => {
@@ -256,8 +376,10 @@ export default function App() {
     }
   };
 
-  // Reset all state to begin a new split
+  // Reset all state to begin a new split and clear active session
   const handleReset = () => {
+    clearActiveSession();
+    clearPendingUPIReturn();
     setOriginalPayment(null);
     setHasOriginalAmount(false);
     setSplitPayments([]);
@@ -273,6 +395,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fafafa] dark:bg-black text-neutral-900 dark:text-neutral-100 font-sans flex flex-row transition-colors selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-black">
+      {/* Auto-Marked Payment Floating Notification */}
+      <AnimatePresence>
+        {autoCompleteToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -24, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -24, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-black dark:bg-white text-white dark:text-black px-4 py-2.5 rounded-full shadow-xl text-xs font-bold flex items-center gap-2 select-none border border-neutral-800 dark:border-neutral-200"
+          >
+            <CheckCircle className="w-4 h-4 text-emerald-400 dark:text-emerald-600 stroke-[2.5]" />
+            <span>{autoCompleteToast}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Sidebar: Houses Split & History Navigation on the side */}
       <Sidebar
         activeView={activeView}
@@ -285,15 +423,8 @@ export default function App() {
         onTogglePrivacyMode={() => setPrivacyMode(!privacyMode)}
       />
 
-      {/* Main View Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Offline Alert */}
-        {!isOnline && (
-          <div className="bg-neutral-900 text-white dark:bg-white dark:text-black text-xs py-2 px-4 text-center flex items-center justify-center gap-2 no-print">
-            <WifiOff className="w-3.5 h-3.5" />
-            <span>Offline mode active. All splits and QRs run completely on your device.</span>
-          </div>
-        )}
+      {/* Main View Area (with left-padding on desktop for unmovable fixed sidebar) */}
+      <div className="flex-1 flex flex-col min-w-0 md:pl-64 w-full transition-all">
 
         {/* Minimal App Header */}
         <Header
@@ -305,6 +436,9 @@ export default function App() {
           hasActiveSession={step !== 'upload' || splitPayments.length > 0}
           activeView={activeView}
         />
+
+        {/* Dynamic Offline Connectivity Banner */}
+        <OfflineIndicator />
 
         {/* Main Content Area (with safe-area padding for mobile bottom bar) */}
         <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-28 md:pb-12">

@@ -40,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       id="desktop-sidebar"
-      className="hidden md:flex flex-col w-64 border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black p-5 h-screen sticky top-0 shrink-0 select-none z-30 no-print transition-colors justify-between text-left"
+      className="hidden md:flex flex-col fixed top-0 left-0 bottom-0 w-64 h-screen border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black p-5 shrink-0 select-none z-30 no-print transition-colors justify-between text-left overflow-y-auto"
     >
       {/* Top Section: Brand Logo & Main Navigation */}
       <div className="space-y-6">
@@ -197,10 +197,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Required Attribution */}
         <div className="pt-2 text-[11px] leading-relaxed text-neutral-500 dark:text-neutral-400">
           <div className="font-semibold text-neutral-900 dark:text-neutral-200">
-            Designed and Developed By Satyam RojhaX.
-          </div>
-          <div className="text-[10px] text-neutral-500 dark:text-neutral-500 mt-0.5">
-            Brought to you by LFRDCA Technologies
+            Designed & Developed By Satyam RojhaX
           </div>
         </div>
       </div>

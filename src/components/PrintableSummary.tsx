@@ -233,7 +233,7 @@ export const PrintableSummary: React.FC<PrintableSummaryProps> = ({
         {/* Paper Footer with Attribution */}
         <div className="mt-6 pt-3 border-t-2 border-black text-center space-y-1">
           <div className="text-[10px] text-gray-800 font-semibold">
-            Designed and Developed By Satyam RojhaX. • Brought to you by LFRDCA Technologies
+            Designed & Developed By Satyam RojhaX
           </div>
           <p className="text-[9px] text-gray-600 leading-tight">
             SplitPay is an on-device utility. Payments are executed directly via your authorized UPI app. Verify all payee details before entering your UPI PIN.

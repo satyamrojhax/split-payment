@@ -10,7 +10,7 @@ export const RegulatoryDisclaimer: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50 transition text-xs font-semibold text-neutral-700 dark:text-neutral-300 cursor-pointer"
+          className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50 transition text-xs font-semibold text-neutral-700 dark:text-neutral-300 cursor-pointer min-h-[44px]"
         >
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-3.5 h-3.5 text-neutral-500" />
@@ -51,10 +51,7 @@ export const Footer: React.FC = () => {
         {/* Required Attribution */}
         <div className="pt-2 text-xs text-neutral-700 dark:text-neutral-300 font-medium">
           <p className="font-bold text-neutral-900 dark:text-white">
-            Designed and Developed By Satyam RojhaX.
-          </p>
-          <p className="text-neutral-500 dark:text-neutral-400 text-[11px] mt-0.5">
-            Brought to you by LFRDCA Technologies
+            Designed & Developed By Satyam RojhaX
           </p>
         </div>
 

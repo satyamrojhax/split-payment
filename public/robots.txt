@@ -1,0 +1,8 @@
+# robots.txt for SplitPay
+# Allow all web crawlers and search engines to index SplitPay
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: /sitemap.xml

@@ -133,7 +133,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
               <button
                 type="button"
                 onClick={() => setShowConfirmClear(false)}
-                className="flex-1 sm:flex-initial px-3 py-2 rounded-lg text-xs font-semibold border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition cursor-pointer min-h-[40px]"
+                className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs font-semibold border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition cursor-pointer min-h-[44px] flex items-center justify-center"
               >
                 Cancel
               </button>
@@ -143,7 +143,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
                   onClearAll();
                   setShowConfirmClear(false);
                 }}
-                className="flex-1 sm:flex-initial px-3 py-2 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-700 transition cursor-pointer shadow-xs min-h-[40px]"
+                className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-700 transition cursor-pointer shadow-xs min-h-[44px] flex items-center justify-center"
               >
                 Yes, Delete All
               </button>
@@ -279,7 +279,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
                     <button
                       type="button"
                       onClick={() => setExpandedId(isExpanded ? null : record.id)}
-                      className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 cursor-pointer transition py-1 min-h-[38px]"
+                      className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 cursor-pointer transition py-1 min-h-[44px]"
                     >
                       <span>{isExpanded ? 'Hide parts' : `View ${totalParts} parts`}</span>
                       {isExpanded ? (
@@ -294,7 +294,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
                         type="button"
                         onClick={() => onDeleteRecord(record.id)}
                         title="Delete this record"
-                        className="p-2 rounded-lg text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
+                        className="p-2.5 rounded-lg text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -302,7 +302,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
                       <button
                         type="button"
                         onClick={() => onResumeSplit(record)}
-                        className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition cursor-pointer shadow-xs min-h-[38px]"
+                        className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition cursor-pointer shadow-xs min-h-[44px]"
                       >
                         <span>Open & Pay</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />

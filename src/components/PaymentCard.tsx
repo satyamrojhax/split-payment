@@ -3,6 +3,7 @@ import { Download, Share2, ExternalLink, Check, Clock } from 'lucide-react';
 import { SplitPayment, UPIPayment } from '../types/upi';
 import { formatINR } from '../utils/currency';
 import { downloadPaymentQR, sharePaymentQR } from '../lib/imageExporter';
+import { setPendingUPIReturn } from '../utils/activeSessionStorage';
 
 interface PaymentCardProps {
   payment: SplitPayment;
@@ -27,9 +28,15 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
   };
 
   const handlePay = () => {
-    window.location.href = payment.uri;
+    setPendingUPIReturn({
+      paymentId: payment.id,
+      recordId: null,
+      partIndex: payment.index,
+      timestamp: Date.now(),
+    });
     onStatusChange(payment.id, 'opened');
-    showToast('UPI app opening. Verify and complete payment.');
+    showToast('Opening UPI app... Auto-marks completed on return.');
+    window.location.href = payment.uri;
   };
 
   const handleSave = async () => {
@@ -109,22 +116,40 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
           </button>
         </div>
 
-        {/* QR Code Box */}
+        {/* QR Code Box (Clickable to pay directly with UPI) */}
         <div className="my-4 flex flex-col items-center">
-          <div className="relative p-3.5 bg-white rounded-xl border border-neutral-200 shadow-xs">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={handlePay}
+            onKeyDown={(e) => e.key === 'Enter' && handlePay()}
+            id={`qr-container-${payment.index}`}
+            title="Tap QR code to pay with your UPI app"
+            className="group relative p-3.5 bg-white rounded-xl border border-neutral-200 hover:border-black dark:hover:border-white shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden select-none"
+          >
             {payment.qrSvg ? (
               <div
-                className="w-44 h-44 sm:w-48 sm:h-48"
+                className="w-44 h-44 sm:w-48 sm:h-48 group-hover:opacity-95 transition-opacity"
                 dangerouslySetInnerHTML={{ __html: payment.qrSvg }}
               />
             ) : payment.qrDataUrl ? (
               <img
                 src={payment.qrDataUrl}
                 alt={`QR for payment ${payment.index}`}
-                className="w-44 h-44 sm:w-48 sm:h-48 object-contain"
+                className="w-44 h-44 sm:w-48 sm:h-48 object-contain group-hover:opacity-95 transition-opacity"
               />
             ) : (
               <div className="w-44 h-44 bg-neutral-100 animate-pulse rounded-lg" />
+            )}
+
+            {/* Subtle tap overlay on hover */}
+            {!isCompleted && (
+              <div className="absolute inset-x-0 bottom-2 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <span className="px-2.5 py-1 rounded-full bg-black/80 text-white text-[10px] font-bold tracking-tight shadow-md flex items-center gap-1">
+                  <ExternalLink className="w-2.5 h-2.5" />
+                  <span>Tap to Pay</span>
+                </span>
+              </div>
             )}
 
             {/* Paid Watermark Overlay when marked Completed */}
@@ -139,9 +164,12 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
               </div>
             )}
           </div>
+          <span className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-1">
+            Tap QR code or button below to pay
+          </span>
 
           {/* Amount Display */}
-          <div className="mt-3.5 text-center w-full px-2">
+          <div className="mt-2.5 text-center w-full px-2">
             <div className={`text-3xl font-extrabold tracking-tight transition ${
               isCompleted ? 'text-neutral-500 dark:text-neutral-400 line-through' : 'text-neutral-900 dark:text-white'
             }`}>
@@ -177,7 +205,7 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
             disabled={downloading}
             onClick={handleSave}
             id={`btn-save-${payment.index}`}
-            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition cursor-pointer min-h-[42px]"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition cursor-pointer min-h-[44px]"
           >
             <Download className="w-3.5 h-3.5" />
             <span>{downloading ? 'Saving...' : 'Save QR'}</span>
@@ -188,7 +216,7 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
             disabled={sharing}
             onClick={handleShare}
             id={`btn-share-${payment.index}`}
-            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition cursor-pointer min-h-[42px]"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition cursor-pointer min-h-[44px]"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span>Share</span>
