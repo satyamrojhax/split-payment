@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#20294c"/>
+  <!-- Decorative subtle background grid dots -->
+  <circle cx="100" cy="100" r="4" fill="#375390" opacity="0.4"/>
+  <circle cx="412" cy="100" r="4" fill="#375390" opacity="0.4"/>
+  <circle cx="100" cy="412" r="4" fill="#375390" opacity="0.4"/>
+  <circle cx="412" cy="412" r="4" fill="#375390" opacity="0.4"/>
+
+  <!-- QR Outer target top left -->
+  <rect x="110" y="110" width="100" height="100" rx="20" fill="none" stroke="#459af8" stroke-width="16"/>
+  <rect x="140" y="140" width="40" height="40" rx="8" fill="#ffffff"/>
+
+  <!-- QR Outer target top right -->
+  <rect x="302" y="110" width="100" height="100" rx="20" fill="none" stroke="#459af8" stroke-width="16"/>
+  <rect x="332" y="140" width="40" height="40" rx="8" fill="#ffffff"/>
+
+  <!-- Split Divider Dynamic Line (The "Split" element) -->
+  <line x1="120" y1="392" x2="392" y2="120" stroke="#ffff00" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Rupee Symbol & Split Blocks in lower half -->
+  <g transform="translate(110, 270)">
+    <rect x="0" y="0" width="60" height="60" rx="14" fill="#375390"/>
+    <text x="30" y="42" font-family="system-ui, sans-serif" font-weight="bold" font-size="34" fill="#ffffff" text-anchor="middle">₹</text>
+  </g>
+  <g transform="translate(190, 310)">
+    <rect x="0" y="0" width="60" height="60" rx="14" fill="#459af8"/>
+    <text x="30" y="42" font-family="system-ui, sans-serif" font-weight="bold" font-size="34" fill="#ffffff" text-anchor="middle">₹</text>
+  </g>
+  <g transform="translate(270, 350)">
+    <rect x="0" y="0" width="60" height="60" rx="14" fill="#ffffff"/>
+    <text x="30" y="42" font-family="system-ui, sans-serif" font-weight="bold" font-size="34" fill="#20294c" text-anchor="middle">₹</text>
+  </g>
+</svg>

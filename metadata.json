@@ -1,0 +1,10 @@
+{
+  "name": "SplitPay",
+  "description": "Split a large UPI payment into smaller payment amounts — privately, securely, and entirely on your device.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

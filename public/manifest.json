@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "SplitPay — Split Large UPI Payments",
+  "short_name": "SplitPay",
+  "description": "Split a large UPI payment into smaller payment amounts — privately, securely, and entirely on your device.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f0f1f5",
+  "theme_color": "#20294c",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
