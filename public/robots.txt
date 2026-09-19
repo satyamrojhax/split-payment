@@ -1,8 +1,6 @@
-# robots.txt for SplitPay
-# Allow all web crawlers and search engines to index SplitPay
-
+# robots.txt for SplitPay (https://splittopay.vercel.app)
 User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: /sitemap.xml
+Sitemap: https://splittopay.vercel.app/sitemap.xml

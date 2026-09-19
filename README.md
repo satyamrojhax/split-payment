@@ -159,7 +159,7 @@ npm run lint
 
 **Satyam RojhaX**
 - Email: satyamrojhax@gmail.com
-- Application: [SplitPay Online](https://ais-pre-uhc7bnirfzga3aaud7jaff-611231726915.asia-southeast1.run.app)
+- Application: [SplitPay Online](https://splittopay.vercel.app)
 
 ---
 

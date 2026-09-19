@@ -13,7 +13,10 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ activeView }) => {
   return (
-    <header className="w-full bg-white dark:bg-black border-b border-neutral-200 dark:border-neutral-800 sticky top-0 z-20 no-print transition-colors">
+    <header
+      id="app-header"
+      className="w-full bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 sticky top-0 z-30 no-print transition-colors shadow-xs"
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
         {/* Left: Brand Logo & Title */}
         <div className="flex items-center gap-3">

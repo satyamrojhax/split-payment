@@ -66,10 +66,39 @@ export default function App() {
   // Load any previously active session (so refresh preserves exact screen & data)
   const initialSession = getActiveSession();
 
-  // Main View Mode: Split Workflow vs History Page
-  const [activeView, setActiveView] = useState<'split' | 'history'>(
-    () => initialSession?.activeView || 'split'
-  );
+  // Main View Mode: Split Workflow vs History Page (supports direct /history URL)
+  const [activeView, setActiveView] = useState<'split' | 'history'>(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase();
+      if (path === '/history' || path.startsWith('/history')) {
+        return 'history';
+      }
+    }
+    return initialSession?.activeView || 'split';
+  });
+
+  // Sync activeView with browser history URL for clean crawling and indexing
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const currentPath = window.location.pathname.toLowerCase();
+    if (activeView === 'history' && currentPath !== '/history') {
+      window.history.pushState({ view: 'history' }, '', '/history');
+    } else if (activeView === 'split' && currentPath === '/history') {
+      window.history.pushState({ view: 'split' }, '', '/');
+    }
+
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      if (path === '/history') {
+        setActiveView('history');
+      } else {
+        setActiveView('split');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [activeView]);
 
   // History Records from Local Storage
   const [historyRecords, setHistoryRecords] = useState<HistoryRecord[]>(() =>
