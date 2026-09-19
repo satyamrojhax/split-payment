@@ -32,7 +32,7 @@ export interface SplitPayment {
   referenceId: string;     // Part reference
 }
 
-export type SplitStrategy = 'max_amount' | 'balanced' | 'equal' | 'custom';
+export type SplitStrategy = 'random' | 'balanced' | 'max_amount' | 'equal' | 'custom';
 
 export interface SplitPayState {
   step: 'upload' | 'configure' | 'confirm' | 'results';

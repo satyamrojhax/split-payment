@@ -72,7 +72,7 @@ export default function App() {
 
   // Configuration State
   const [totalAmount, setTotalAmount] = useState<number>(7000);
-  const [strategy, setStrategy] = useState<SplitStrategy>('balanced');
+  const [strategy, setStrategy] = useState<SplitStrategy>('random');
   const [maxAmount, setMaxAmount] = useState<number>(1999);
   const [equalParts, setEqualParts] = useState<number>(4);
   const [customAmounts, setCustomAmounts] = useState<number[]>([2000, 1500, 2000, 1500]);

@@ -43,9 +43,9 @@ export const SplitResultsView: React.FC<SplitResultsViewProps> = ({
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-6 text-left">
+    <div className="w-full max-w-5xl mx-auto space-y-4 sm:space-y-6 text-left">
       {/* Top Banner: Overview & Quick Actions */}
-      <div className="rounded-2xl bg-white dark:bg-neutral-900 p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs no-print">
+      <div className="rounded-2xl bg-white dark:bg-neutral-900 p-4 sm:p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs no-print">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-neutral-100 dark:border-neutral-800">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -53,10 +53,10 @@ export const SplitResultsView: React.FC<SplitResultsViewProps> = ({
                 {payments.length} Payments Generated
               </span>
             </div>
-            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
               {originalPayment.pn || 'UPI Receiver'}
             </h2>
-            <p className="text-xs font-mono text-neutral-500 dark:text-neutral-400 mt-0.5">
+            <p className="text-xs font-mono text-neutral-500 dark:text-neutral-400 mt-0.5 break-all">
               {originalPayment.pa}
             </p>
           </div>
@@ -67,33 +67,33 @@ export const SplitResultsView: React.FC<SplitResultsViewProps> = ({
               <span className="text-[10px] uppercase font-bold text-neutral-400 dark:text-neutral-500 tracking-wider block">
                 Total Split
               </span>
-              <span className="text-2xl font-extrabold text-neutral-900 dark:text-white">
+              <span className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-white">
                 {formatINR(totalAmount)}
               </span>
             </div>
 
             {/* Batch Action Buttons: Download ZIP & Print */}
-            <div className="flex items-center gap-2">
+            <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={handleDownloadZip}
                 disabled={isZipping}
                 id="btn-download-all-zip"
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition shadow-xs"
+                className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition shadow-xs min-h-[44px] cursor-pointer"
               >
-                <Archive className="w-3.5 h-3.5" />
-                <span>{isZipping ? 'Downloading...' : 'Download All (ZIP)'}</span>
+                <Archive className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">{isZipping ? 'Downloading...' : 'Download ZIP'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={handlePrint}
                 id="btn-print-summary"
-                className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition"
+                className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition min-h-[44px] cursor-pointer"
                 title="Print payment sheets"
               >
-                <Printer className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Print</span>
+                <Printer className="w-3.5 h-3.5 shrink-0" />
+                <span>Print</span>
               </button>
             </div>
           </div>
@@ -116,11 +116,11 @@ export const SplitResultsView: React.FC<SplitResultsViewProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 self-end sm:self-auto">
             <button
               type="button"
               onClick={onModifySplit}
-              className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 transition"
+              className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 transition py-1 cursor-pointer"
             >
               <ArrowLeft className="w-3 h-3" />
               <span>Change Split</span>
@@ -129,7 +129,7 @@ export const SplitResultsView: React.FC<SplitResultsViewProps> = ({
             <button
               type="button"
               onClick={onResetAll}
-              className="text-xs font-semibold text-neutral-500 hover:text-red-600 dark:hover:text-red-400 flex items-center gap-1 transition"
+              className="text-xs font-semibold text-neutral-500 hover:text-red-600 dark:hover:text-red-400 flex items-center gap-1 transition py-1 cursor-pointer"
             >
               <RefreshCw className="w-3 h-3" />
               <span>New Payment</span>

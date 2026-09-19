@@ -141,16 +141,16 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
           </div>
 
           {/* Amount Display */}
-          <div className="mt-3.5 text-center">
+          <div className="mt-3.5 text-center w-full px-2">
             <div className={`text-3xl font-extrabold tracking-tight transition ${
               isCompleted ? 'text-neutral-500 dark:text-neutral-400 line-through' : 'text-neutral-900 dark:text-white'
             }`}>
               {formatINR(payment.amount)}
             </div>
-            <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200 mt-0.5 truncate max-w-[220px]">
+            <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200 mt-0.5 truncate max-w-full">
               {recipientName}
             </p>
-            <p className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 truncate max-w-[220px]">
+            <p className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 truncate max-w-full">
               {originalPayment.pa}
             </p>
           </div>
@@ -164,7 +164,7 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
           type="button"
           onClick={handlePay}
           id={`btn-pay-${payment.index}`}
-          className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition cursor-pointer min-h-[44px] shadow-xs"
         >
           <ExternalLink className="w-3.5 h-3.5" />
           <span>Pay via UPI App</span>
@@ -177,7 +177,7 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
             disabled={downloading}
             onClick={handleSave}
             id={`btn-save-${payment.index}`}
-            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition cursor-pointer"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition cursor-pointer min-h-[42px]"
           >
             <Download className="w-3.5 h-3.5" />
             <span>{downloading ? 'Saving...' : 'Save QR'}</span>
@@ -188,7 +188,7 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
             disabled={sharing}
             onClick={handleShare}
             id={`btn-share-${payment.index}`}
-            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition cursor-pointer"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition cursor-pointer min-h-[42px]"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span>Share</span>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ArrowLeft, Plus, Trash2, ShieldAlert, Sparkles, Scale, Sliders, Layers } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Plus, Trash2, ShieldAlert, Sparkles, Scale, Sliders, Layers, Shuffle } from 'lucide-react';
 import { UPIPayment, SplitStrategy } from '../types/upi';
 import { formatINR } from '../utils/currency';
 import { calculateSplit, SplitResult } from '../lib/splitEngine';
@@ -31,7 +31,8 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     (originalPayment.am || initialAmount || 7000).toString()
   );
 
-  const [strategy, setStrategy] = useState<SplitStrategy>('balanced');
+  const [strategy, setStrategy] = useState<SplitStrategy>('random');
+  const [shuffleSeed, setShuffleSeed] = useState<number>(0);
   const [maxAmount, setMaxAmount] = useState<number>(1999);
   const [equalParts, setEqualParts] = useState<number>(4);
   const [customAmounts, setCustomAmounts] = useState<number[]>([2000, 1500, 2000, 1500]);
@@ -50,9 +51,10 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       maxAmountRupees: maxAmount,
       equalPartsCount: equalParts,
       customAmountsRupees: customAmounts,
+      randomSeed: shuffleSeed,
     });
     setSplitResult(result);
-  }, [totalAmount, strategy, maxAmount, equalParts, customAmounts]);
+  }, [totalAmount, strategy, maxAmount, equalParts, customAmounts, shuffleSeed]);
 
   const handleAmountChange = (valStr: string) => {
     setAmountInputStr(valStr);
@@ -91,9 +93,9 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   const canContinue = splitResult.isValid && splitResult.amountsRupees.length > 0;
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6 text-left">
+    <div className="w-full max-w-2xl mx-auto space-y-4 sm:space-y-6 text-left">
       {/* Top Receiver Summary Card */}
-      <div className="rounded-2xl bg-white dark:bg-neutral-900 p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs">
+      <div className="rounded-2xl bg-white dark:bg-neutral-900 p-4 sm:p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-neutral-100 dark:border-neutral-800">
           <div>
             <span className="text-[11px] uppercase font-bold text-neutral-400 dark:text-neutral-500 tracking-wider">
@@ -127,18 +129,48 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
         {/* Strategy Selector */}
         <div className="mt-6">
-          <label className="block text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 mb-2.5">
-            Select Split Method
-          </label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            
+          <div className="flex items-center justify-between mb-2.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-neutral-100">
+              Select Split Method
+            </label>
+            {strategy === 'random' && (
+              <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                Random amounts under ₹2,000
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+            {/* Random Varied Split */}
+            <button
+              type="button"
+              id="strategy-random"
+              onClick={() => {
+                setStrategy('random');
+                setShuffleSeed((s) => s + 1);
+              }}
+              className={`p-3 rounded-xl text-left transition border cursor-pointer ${
+                strategy === 'random'
+                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs'
+                  : 'bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white border-neutral-200 dark:border-neutral-800 hover:border-neutral-400'
+              }`}
+            >
+              <div className="flex items-center gap-1.5 mb-1">
+                <Shuffle className="w-3.5 h-3.5" />
+                <span className="text-xs font-bold">Random Varied</span>
+              </div>
+              <p className={`text-[10px] leading-tight ${strategy === 'random' ? 'opacity-80' : 'text-neutral-500 dark:text-neutral-400'}`}>
+                e.g. ₹1,928, ₹1,802
+              </p>
+            </button>
+
             {/* Balanced Split */}
             <button
               type="button"
+              id="strategy-balanced"
               onClick={() => setStrategy('balanced')}
-              className={`p-3 rounded-xl text-left transition border ${
+              className={`p-3 rounded-xl text-left transition border cursor-pointer ${
                 strategy === 'balanced'
-                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
+                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs'
                   : 'bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white border-neutral-200 dark:border-neutral-800 hover:border-neutral-400'
               }`}
             >
@@ -154,10 +186,11 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             {/* Max Limit */}
             <button
               type="button"
+              id="strategy-max"
               onClick={() => setStrategy('max_amount')}
-              className={`p-3 rounded-xl text-left transition border ${
+              className={`p-3 rounded-xl text-left transition border cursor-pointer ${
                 strategy === 'max_amount'
-                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
+                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs'
                   : 'bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white border-neutral-200 dark:border-neutral-800 hover:border-neutral-400'
               }`}
             >
@@ -173,10 +206,11 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             {/* Equal Split */}
             <button
               type="button"
+              id="strategy-equal"
               onClick={() => setStrategy('equal')}
-              className={`p-3 rounded-xl text-left transition border ${
+              className={`p-3 rounded-xl text-left transition border cursor-pointer ${
                 strategy === 'equal'
-                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
+                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs'
                   : 'bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white border-neutral-200 dark:border-neutral-800 hover:border-neutral-400'
               }`}
             >
@@ -192,10 +226,11 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             {/* Custom Split */}
             <button
               type="button"
+              id="strategy-custom"
               onClick={() => setStrategy('custom')}
-              className={`p-3 rounded-xl text-left transition border ${
+              className={`p-3 rounded-xl text-left transition border cursor-pointer ${
                 strategy === 'custom'
-                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
+                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs'
                   : 'bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white border-neutral-200 dark:border-neutral-800 hover:border-neutral-400'
               }`}
             >
@@ -212,53 +247,59 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
         {/* Strategy Specific Controls */}
         <div className="mt-4 p-4 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800">
-          {(strategy === 'balanced' || strategy === 'max_amount') && (
+          {(strategy === 'random' || strategy === 'balanced' || strategy === 'max_amount') && (
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-xs font-bold text-neutral-900 dark:text-white">
-                  {strategy === 'balanced' ? 'Upper limit per payment:' : 'Maximum payment amount:'}
+                  {strategy === 'random'
+                    ? 'Payment Cap (Keep under ₹2,000):'
+                    : strategy === 'balanced'
+                    ? 'Upper limit per payment:'
+                    : 'Maximum payment amount:'}
                 </label>
                 <span className="text-xs font-mono font-bold text-neutral-900 dark:text-white">
                   {formatINR(maxAmount)}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <div className="relative flex-1">
-                  <span className="absolute left-3 top-2 text-xs font-bold text-neutral-400">₹</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-neutral-400">₹</span>
                   <input
                     type="number"
                     min="1"
                     value={maxAmount}
                     onChange={(e) => setMaxAmount(Math.max(1, parseFloat(e.target.value) || 1))}
-                    className="w-full pl-7 pr-3 py-1.5 text-sm font-bold bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
+                    className="w-full pl-7 pr-3 py-2 text-sm font-bold bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white min-h-[44px]"
                   />
                 </div>
-                <div className="flex gap-1.5">
+                <div className="grid grid-cols-3 sm:flex gap-1.5 shrink-0">
                   <button
                     type="button"
                     onClick={() => setMaxAmount(1999)}
-                    className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-neutral-900 text-xs font-semibold text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 hover:border-neutral-500"
+                    className="px-2.5 py-2 rounded-lg bg-white dark:bg-neutral-900 text-xs font-semibold text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 min-h-[42px] flex items-center justify-center cursor-pointer"
                   >
                     ₹1,999
                   </button>
                   <button
                     type="button"
                     onClick={() => setMaxAmount(1499)}
-                    className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-neutral-900 text-xs font-semibold text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 hover:border-neutral-500"
+                    className="px-2.5 py-2 rounded-lg bg-white dark:bg-neutral-900 text-xs font-semibold text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 min-h-[42px] flex items-center justify-center cursor-pointer"
                   >
                     ₹1,499
                   </button>
                   <button
                     type="button"
                     onClick={() => setMaxAmount(999)}
-                    className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-neutral-900 text-xs font-semibold text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 hover:border-neutral-500"
+                    className="px-2.5 py-2 rounded-lg bg-white dark:bg-neutral-900 text-xs font-semibold text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 min-h-[42px] flex items-center justify-center cursor-pointer"
                   >
                     ₹999
                   </button>
                 </div>
               </div>
               <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-2">
-                {strategy === 'balanced'
+                {strategy === 'random'
+                  ? `Generates varied, natural amounts (like ₹1,928, ₹1,802) keeping every payment strictly under ${formatINR(maxAmount)}.`
+                  : strategy === 'balanced'
                   ? `Splits into equal parts so no payment exceeds ${formatINR(maxAmount)}.`
                   : `Fills payments up to ${formatINR(maxAmount)} with remainder in final payment.`}
               </p>
@@ -354,10 +395,24 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
         {/* Real-time Preview */}
         <div className="mt-5 pt-4 border-t border-neutral-100 dark:border-neutral-800">
-          <div className="flex items-center justify-between mb-2.5">
-            <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-              Split Breakdown ({splitResult.amountsRupees.length} payments)
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Split Breakdown ({splitResult.amountsRupees.length} payments)
+              </span>
+              {strategy === 'random' && (
+                <button
+                  type="button"
+                  id="shuffle-amounts-btn"
+                  onClick={() => setShuffleSeed((s) => s + 1)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-200/70 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 text-[11px] font-bold transition cursor-pointer"
+                  title="Generate another set of random amounts under ₹2,000"
+                >
+                  <Shuffle className="w-3 h-3" />
+                  <span>Shuffle / Re-roll</span>
+                </button>
+              )}
+            </div>
             <span className="text-xs font-mono font-semibold text-neutral-900 dark:text-white">
               Total: {formatINR(totalAmount)}
             </span>
@@ -390,11 +445,11 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex items-center justify-between pt-1">
+      <div className="flex items-center justify-between pt-1 gap-2">
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition"
+          className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold hover:border-black dark:hover:border-white transition min-h-[44px] cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back</span>
@@ -415,7 +470,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               });
             }
           }}
-          className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold transition ${
+          className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-bold transition min-h-[44px] ${
             canContinue
               ? 'bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100 cursor-pointer shadow-xs'
               : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed'

@@ -72,7 +72,7 @@ export const QRUploader: React.FC<QRUploaderProps> = ({
         }}
         onClick={() => fileInputRef.current?.click()}
         id="qr-upload-dropzone"
-        className={`relative rounded-2xl p-8 sm:p-10 text-center cursor-pointer transition border-2 border-dashed ${
+        className={`relative rounded-2xl p-6 sm:p-10 text-center cursor-pointer transition border-2 border-dashed ${
           isDragging
             ? 'border-black dark:border-white bg-neutral-100 dark:bg-neutral-900'
             : 'border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:border-neutral-500 dark:hover:border-neutral-600'
@@ -92,7 +92,7 @@ export const QRUploader: React.FC<QRUploaderProps> = ({
             <Upload className="w-6 h-6 stroke-[2]" />
           </div>
 
-          <h3 className="text-lg font-bold text-neutral-900 dark:text-white tracking-tight mb-1">
+          <h3 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white tracking-tight mb-1">
             Drop your QR code screenshot
           </h3>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-xs mb-4">
@@ -102,7 +102,7 @@ export const QRUploader: React.FC<QRUploaderProps> = ({
           <button
             type="button"
             disabled={isProcessing}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition min-h-[44px] cursor-pointer"
           >
             <ImageIcon className="w-3.5 h-3.5" />
             <span>{isProcessing ? 'Reading on device...' : 'Choose Image'}</span>
@@ -119,12 +119,12 @@ export const QRUploader: React.FC<QRUploaderProps> = ({
       )}
 
       {/* Other Options: Camera Scan & Paste Link */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         <button
           type="button"
           onClick={onOpenScanner}
           id="btn-scan-camera"
-          className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 font-semibold text-xs transition"
+          className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 font-semibold text-xs transition min-h-[44px] cursor-pointer"
         >
           <Camera className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
           <span>Scan with Camera</span>
@@ -134,7 +134,7 @@ export const QRUploader: React.FC<QRUploaderProps> = ({
           type="button"
           onClick={onOpenPasteModal}
           id="btn-paste-link"
-          className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 font-semibold text-xs transition"
+          className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 font-semibold text-xs transition min-h-[44px] cursor-pointer"
         >
           <Link2 className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
           <span>Paste UPI Link</span>

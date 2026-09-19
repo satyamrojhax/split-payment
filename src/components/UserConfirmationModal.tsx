@@ -22,7 +22,7 @@ export const UserConfirmationModal: React.FC<UserConfirmationModalProps> = ({
 }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/80 backdrop-blur-xs p-4 overflow-y-auto text-left">
-      <div className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-neutral-200 dark:border-neutral-800 p-6 my-8">
+      <div className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 my-auto">
         
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-3.5 border-b border-neutral-100 dark:border-neutral-800">
@@ -37,7 +37,7 @@ export const UserConfirmationModal: React.FC<UserConfirmationModalProps> = ({
           <button
             onClick={onCancel}
             disabled={isGenerating}
-            className="p-1 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>
@@ -81,7 +81,7 @@ export const UserConfirmationModal: React.FC<UserConfirmationModalProps> = ({
           {splitAmounts.map((amt, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 text-xs border border-neutral-200 dark:border-neutral-800"
+              className="flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 text-xs border border-neutral-200 dark:border-neutral-800"
             >
               <span className="font-medium text-neutral-600 dark:text-neutral-400">
                 Payment {idx + 1}
@@ -98,12 +98,12 @@ export const UserConfirmationModal: React.FC<UserConfirmationModalProps> = ({
         </p>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-2.5 mt-5 pt-3.5 border-t border-neutral-100 dark:border-neutral-800">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 mt-5 pt-3.5 border-t border-neutral-100 dark:border-neutral-800">
           <button
             type="button"
             disabled={isGenerating}
             onClick={onCancel}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition min-h-[44px] flex items-center justify-center cursor-pointer"
           >
             Back
           </button>
@@ -111,7 +111,7 @@ export const UserConfirmationModal: React.FC<UserConfirmationModalProps> = ({
             type="button"
             disabled={isGenerating}
             onClick={onConfirm}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-xs"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-xs min-h-[44px] cursor-pointer"
           >
             {isGenerating ? (
               <span>Generating QRs...</span>

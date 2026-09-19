@@ -100,14 +100,9 @@ export const ManualEntryForm: React.FC<ManualEntryFormProps> = ({ onSuccess }) =
     onSuccess(payment, true);
   };
 
-  const handleQuickAmount = (amt: number) => {
-    setAmountInput(amt.toString());
-    if (error) setError(null);
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto space-y-5 text-left">
-      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 sm:p-7 shadow-xs space-y-5">
+    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto space-y-4 text-left">
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
         
         {/* Field 1: UPI ID or Phone */}
         <div>
@@ -127,7 +122,7 @@ export const ManualEntryForm: React.FC<ManualEntryFormProps> = ({ onSuccess }) =
               if (error) setError(null);
             }}
             placeholder="e.g. 9876543210 or store@okhdfcbank"
-            className="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 text-sm font-medium focus:outline-none focus:border-black dark:focus:border-white transition"
+            className="w-full px-3.5 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 text-sm font-medium focus:outline-none focus:border-black dark:focus:border-white transition min-h-[44px]"
           />
 
           {/* Quick Handle Selection if user types a number or prefix */}
@@ -141,9 +136,9 @@ export const ManualEntryForm: React.FC<ManualEntryFormProps> = ({ onSuccess }) =
                   type="button"
                   key={h}
                   onClick={() => setSelectedHandle(selectedHandle === h ? '' : h)}
-                  className={`px-2 py-0.5 rounded-md text-[11px] font-mono transition border ${
+                  className={`px-2.5 py-1 rounded-lg text-xs font-mono transition border min-h-[30px] flex items-center justify-center cursor-pointer ${
                     selectedHandle === h
-                      ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
+                      ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs'
                       : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700 hover:border-neutral-400'
                   }`}
                 >
@@ -165,7 +160,7 @@ export const ManualEntryForm: React.FC<ManualEntryFormProps> = ({ onSuccess }) =
             </span>
           </div>
           <div className="relative">
-            <span className="absolute left-4 top-3 text-base font-bold text-neutral-400 dark:text-neutral-500">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base font-bold text-neutral-400 dark:text-neutral-500">
               ₹
             </span>
             <input
@@ -178,26 +173,8 @@ export const ManualEntryForm: React.FC<ManualEntryFormProps> = ({ onSuccess }) =
                 if (error) setError(null);
               }}
               placeholder="7000"
-              className="w-full pl-9 pr-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-lg font-bold focus:outline-none focus:border-black dark:focus:border-white transition"
+              className="w-full pl-9 pr-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-lg font-bold focus:outline-none focus:border-black dark:focus:border-white transition min-h-[44px]"
             />
-          </div>
-
-          {/* Quick preset chips */}
-          <div className="flex items-center gap-2 mt-2.5 flex-wrap">
-            {[2000, 3000, 5000, 7000, 10000, 15000].map((amt) => (
-              <button
-                type="button"
-                key={amt}
-                onClick={() => handleQuickAmount(amt)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition ${
-                  parseFloat(amountInput) === amt
-                    ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
-                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700'
-                }`}
-              >
-                ₹{amt.toLocaleString('en-IN')}
-              </button>
-            ))}
           </div>
         </div>
 
@@ -216,7 +193,7 @@ export const ManualEntryForm: React.FC<ManualEntryFormProps> = ({ onSuccess }) =
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
             placeholder="e.g. Shop Name or Friend"
-            className="w-full px-4 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 text-sm focus:outline-none focus:border-black dark:focus:border-white transition"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 text-sm focus:outline-none focus:border-black dark:focus:border-white transition min-h-[44px]"
           />
         </div>
 
@@ -232,7 +209,7 @@ export const ManualEntryForm: React.FC<ManualEntryFormProps> = ({ onSuccess }) =
         <button
           type="submit"
           id="btn-manual-split-proceed"
-          className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-xs cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-xs cursor-pointer min-h-[48px]"
         >
           <span>Continue to Split →</span>
         </button>

@@ -47,7 +47,7 @@ export const WorkflowProgress: React.FC<WorkflowProgressProps> = ({
               key={step.id}
               disabled={!isClickable && !isCurrent}
               onClick={() => isClickable && onStepClick?.(step.id)}
-              className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all text-xs font-semibold ${
+              className={`relative z-10 flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all text-[11px] sm:text-xs font-semibold min-h-[32px] select-none ${
                 isCurrent
                   ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
                   : isCompleted
@@ -56,7 +56,7 @@ export const WorkflowProgress: React.FC<WorkflowProgressProps> = ({
               }`}
             >
               <span
-                className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
                   isCurrent
                     ? 'bg-white text-black dark:bg-black dark:text-white'
                     : isCompleted
@@ -66,7 +66,7 @@ export const WorkflowProgress: React.FC<WorkflowProgressProps> = ({
               >
                 {isCompleted ? <Check className="w-2.5 h-2.5 stroke-[3]" /> : step.num}
               </span>
-              <span>{step.label}</span>
+              <span className="whitespace-nowrap">{step.label}</span>
             </button>
           );
         })}

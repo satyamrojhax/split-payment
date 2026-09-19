@@ -90,13 +90,13 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           {records.length > 0 && (
             <button
               type="button"
               onClick={() => setShowConfirmClear(true)}
               id="btn-clear-all-history"
-              className="px-3 py-2 rounded-xl text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-400 border border-neutral-200 dark:border-neutral-800 hover:border-red-200 dark:hover:border-red-900 transition flex items-center gap-1.5 cursor-pointer"
+              className="flex-1 sm:flex-initial justify-center px-3 py-2.5 rounded-xl text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-400 border border-neutral-200 dark:border-neutral-800 hover:border-red-200 dark:hover:border-red-900 transition flex items-center gap-1.5 cursor-pointer min-h-[44px]"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Clear History</span>
@@ -107,7 +107,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
             type="button"
             onClick={onStartNewSplit}
             id="btn-history-new-split"
-            className="px-4 py-2 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition shadow-xs flex items-center gap-1.5 cursor-pointer"
+            className="flex-1 sm:flex-initial justify-center px-4 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition shadow-xs flex items-center gap-1.5 cursor-pointer min-h-[44px]"
           >
             <span>+ New Split</span>
           </button>
@@ -129,11 +129,11 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
               </span>{' '}
               This will permanently delete saved history from your device storage.
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={() => setShowConfirmClear(false)}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition cursor-pointer"
+                className="flex-1 sm:flex-initial px-3 py-2 rounded-lg text-xs font-semibold border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition cursor-pointer min-h-[40px]"
               >
                 Cancel
               </button>
@@ -143,7 +143,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
                   onClearAll();
                   setShowConfirmClear(false);
                 }}
-                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-700 transition cursor-pointer shadow-xs"
+                className="flex-1 sm:flex-initial px-3 py-2 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-700 transition cursor-pointer shadow-xs min-h-[40px]"
               >
                 Yes, Delete All
               </button>
@@ -161,7 +161,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by Payee, UPI ID, or Amount..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 text-xs sm:text-sm focus:outline-none focus:border-black dark:focus:border-white transition"
+            className="w-full pl-10 pr-4 py-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 text-sm focus:outline-none focus:border-black dark:focus:border-white transition min-h-[44px]"
           />
         </div>
       )}
@@ -279,7 +279,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
                     <button
                       type="button"
                       onClick={() => setExpandedId(isExpanded ? null : record.id)}
-                      className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 cursor-pointer transition"
+                      className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 cursor-pointer transition py-1 min-h-[38px]"
                     >
                       <span>{isExpanded ? 'Hide parts' : `View ${totalParts} parts`}</span>
                       {isExpanded ? (
@@ -294,15 +294,15 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
                         type="button"
                         onClick={() => onDeleteRecord(record.id)}
                         title="Delete this record"
-                        className="p-1.5 rounded-lg text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition cursor-pointer"
+                        className="p-2 rounded-lg text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
 
                       <button
                         type="button"
                         onClick={() => onResumeSplit(record)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition cursor-pointer shadow-xs"
+                        className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition cursor-pointer shadow-xs min-h-[38px]"
                       >
                         <span>Open & Pay</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />
